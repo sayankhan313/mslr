@@ -4,11 +4,11 @@ import Referendum from "@/models/Referendum";
 
 export async function POST(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+ {params} : { params: Promise<{ id: string }> }
 ) {
   try {
     await connectToDatabase();
-    const { id } = await context.params;
+    const { id } = await params;
 
     const referendum = await Referendum.findById(id);
     if (!referendum) {

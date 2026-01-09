@@ -5,11 +5,11 @@ import Vote from "@/models/Vote";
 
 export async function GET(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  {params} : { params: Promise<{ id: string }> }
 ) {
   try {
     await connectToDatabase();
-    const { id } = await context.params;
+    const { id } = await params;
 
     const referendum = await Referendum.findById(id);
     if (!referendum) {

@@ -3,10 +3,10 @@ import { connectToDatabase } from "@/lib/db";
 import Referendum from "@/models/Referendum";
 import Vote from "@/models/Vote";
 
-export async function  GET(req:NextResponse, context:{params:Promise<{id:string}>}) {
+export async function  GET(req:NextResponse, {params}:{params:Promise<{id:string}>}) {
     try {
         await connectToDatabase();
-        const {id}= await context.params
+        const {id}= await params
 
     const referendum= await Referendum.findById(id);
     if(!referendum){
