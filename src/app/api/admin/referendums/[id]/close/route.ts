@@ -2,21 +2,33 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import Referendum from "@/models/Referendum";
 
-export async function POST(
-  req: NextRequest,
-  {params} : { params: Promise<{ id: string }> }
-) {
+export async function POST(req: NextRequest) {
   try {
     await connectToDatabase();
-    const { id } = await params;
+
+    const segments = new URL(req.url).pathname.split("/").filter(Boolean);
+    const id = segments[segments.length - 2];
+
+    if (!id) {
+      return NextResponse.json(
+        { message: "Referendum not found" },
+        { status: 404 }
+      );
+    }
 
     const referendum = await Referendum.findById(id);
     if (!referendum) {
-      return NextResponse.json({ message: "Referendum not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Referendum not found" },
+        { status: 404 }
+      );
     }
 
     if (referendum.status === "closed") {
-      return NextResponse.json({ message: "Referendum already closed" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Referendum already closed" },
+        { status: 400 }
+      );
     }
 
     await Referendum.findByIdAndUpdate(id, {
@@ -28,8 +40,10 @@ export async function POST(
       message: "Referendum closed successfully",
       status: "closed",
     });
-  } catch (error) {
-    console.error("Close referendum error:", error);
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+  } catch {
+    return NextResponse.json(
+      { message: "Server error" },
+      { status: 500 }
+    );
   }
 }

@@ -3,13 +3,17 @@ import { connectToDatabase } from "@/lib/db";
 import Referendum from "@/models/Referendum";
 import Vote from "@/models/Vote";
 
-export async function GET(
-  req: NextRequest,
-  {params} : { params: Promise<{ id: string }> }
-) {
+/* ===================== GET ===================== */
+export async function GET(req: NextRequest) {
   try {
     await connectToDatabase();
-    const { id } = await params;
+
+    const url = new URL(req.url);
+    const id = url.pathname.split("/").pop();
+
+    if (!id) {
+      return NextResponse.json({ message: "Not found" }, { status: 404 });
+    }
 
     const referendum = await Referendum.findById(id);
     if (!referendum) {
@@ -52,24 +56,38 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  req:NextRequest,
-  context:{params:Promise<{id:string}>}
-) {
+/* ===================== PUT ===================== */
+export async function PUT(req: NextRequest) {
   try {
     await connectToDatabase();
-    const {id}= await context.params;
-    const {title,description,options,eligibleVoters,endDate}=await req.json();
-    const referendum=await Referendum.findById(id);
+
+    const url = new URL(req.url);
+    const id = url.pathname.split("/").pop();
+
+    if (!id) {
+      return NextResponse.json({ message: "Not found" }, { status: 404 });
+    }
+
+    const {
+      title,
+      description,
+      options,
+      eligibleVoters,
+      endDate,
+    } = await req.json();
+
+    const referendum = await Referendum.findById(id);
     if (!referendum) {
       return NextResponse.json({ message: "Not found" }, { status: 404 });
     }
+
     if (referendum.status !== "draft") {
       return NextResponse.json(
         { message: "Only draft referendums can be edited" },
         { status: 403 }
       );
     }
+
     if (
       !title ||
       !description ||
@@ -81,7 +99,8 @@ export async function PUT(
         { message: "Invalid referendum data" },
         { status: 400 }
       );
-    } 
+    }
+
     referendum.title = title;
     referendum.description = description;
     referendum.options = options.map((text: string) => ({ text }));
@@ -89,24 +108,31 @@ export async function PUT(
     referendum.endDate = endDate;
 
     await referendum.save();
+
     return NextResponse.json({
       message: "Referendum updated successfully",
       referendum,
-    });   
-  } catch (error) {
+    });
+  } catch {
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
-  
 }
-export async function DELETE(
-  req: Request,
-  context:{params:Promise<{id:string}>}
-) {
+
+/* ===================== DELETE ===================== */
+export async function DELETE(req: NextRequest) {
   await connectToDatabase();
-  const { id } = await context.params;
+
+  const url = new URL(req.url);
+  const id = url.pathname.split("/").pop();
+
+  if (!id) {
+    return NextResponse.json(
+      { error: "Referendum not found" },
+      { status: 404 }
+    );
+  }
 
   const ref = await Referendum.findById(id);
-
   if (!ref) {
     return NextResponse.json(
       { error: "Referendum not found" },
@@ -114,7 +140,6 @@ export async function DELETE(
     );
   }
 
-  
   if (ref.status === "open") {
     return NextResponse.json(
       { error: "Cannot delete an open referendum" },

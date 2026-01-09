@@ -1,10 +1,10 @@
 "use client";
 
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import AuthCard from "@/components/auth/AuthCard";
 
-export default function AuthPage() {
+function AuthContent() {
   const searchParams = useSearchParams();
   const [mode, setMode] = useState<"login" | "register">("login");
   const [mounted, setMounted] = useState(false);
@@ -30,5 +30,13 @@ export default function AuthPage() {
     <div className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
       <AuthCard mode={mode} setMode={setMode} />
     </div>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={null}>
+      <AuthContent />
+    </Suspense>
   );
 }

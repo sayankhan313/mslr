@@ -2,13 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import Referendum from "@/models/Referendum";
 
-export async function POST(
-  req: NextRequest,
- {params} : { params: Promise<{ id: string }> }
-) {
+export async function POST(req: NextRequest) {
   try {
     await connectToDatabase();
-    const { id } = await params;
+
+    const segments = new URL(req.url).pathname.split("/").filter(Boolean);
+    const id = segments[segments.length - 2];
+
+    if (!id) {
+      return NextResponse.json(
+        { message: "Referendum not found" },
+        { status: 404 }
+      );
+    }
 
     const referendum = await Referendum.findById(id);
     if (!referendum) {
@@ -25,7 +31,6 @@ export async function POST(
       );
     }
 
-   
     const now = new Date();
     if (referendum.endDate && referendum.endDate <= now) {
       return NextResponse.json(
