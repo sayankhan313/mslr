@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "ES2017",
+      "module": "commonjs",
+      "outDir": "dist",
+      "rootDir": "src",
+      "esModuleInterop": true,
+      "strict": false,
+      "skipLibCheck": true,
+  
+      // 👇 IMPORTANT PART (ALIAS SUPPORT)
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*"]
+      }
+    },
+    "include": ["src/utils/sendSCC.ts","src/scripts/seedEC.ts"]
+  }
+  
