@@ -9,7 +9,6 @@ export default function HeroSection() {
     <section className="relative h-[calc(100vh-20rem)] overflow-hidden">
       <PublicHeader />
 
-     
       <Image
         src="/Shangri-La.jpg"
         alt="Shangri-La"
@@ -18,11 +17,9 @@ export default function HeroSection() {
         className="object-cover"
       />
 
-      
-      <div className="absolute inset-0 bg-linear-to-b from-black/55 via-black/45 to-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/60" />
 
-     
-      <div className="relative z-10 h-full flex pt-56 flex-col items-center text-center px-6">
+      <div className="relative z-10 h-full flex flex-col items-center text-center px-6 pt-40 sm:pt-48 lg:pt-56">
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white max-w-5xl drop-shadow-lg">
           My Shangri-La Referendum
         </h1>
