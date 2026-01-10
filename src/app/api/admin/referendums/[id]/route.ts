@@ -3,7 +3,7 @@ import { connectToDatabase } from "@/lib/db";
 import Referendum from "@/models/Referendum";
 import Vote from "@/models/Vote";
 
-/* ===================== GET ===================== */
+
 export async function GET(req: NextRequest) {
   try {
     await connectToDatabase();
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-/* ===================== PUT ===================== */
+
 export async function PUT(req: NextRequest) {
   try {
     await connectToDatabase();
@@ -118,7 +118,7 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-/* ===================== DELETE ===================== */
+
 export async function DELETE(req: NextRequest) {
   await connectToDatabase();
 
