@@ -6,20 +6,23 @@ import PublicHeader from "./PublicHeader";
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen overflow-hidden">
+    <section className="relative overflow-hidden">
       <PublicHeader />
 
-      <Image
-        src="/Shangri-La.jpg"
-        alt="Shangri-La"
-        fill
-        priority
-        className="object-cover"
-      />
+      {/* Background image */}
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/Shangri-La.jpg"
+          alt="Shangri-La"
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/60" />
+      </div>
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/60" />
-
-      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-40 sm:pt-48 lg:pt-56">
+      {/* Content controls height */}
+      <div className="relative z-10 flex flex-col items-center text-center px-6 pt-32 sm:pt-40 lg:pt-48 pb-24">
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white max-w-5xl drop-shadow-lg">
           My Shangri-La Referendum
         </h1>
